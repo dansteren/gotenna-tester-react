@@ -1,19 +1,20 @@
 import * as React from 'react';
 import './App.css';
 
-import logo from './logo.svg';
-
-class App extends React.Component {
+class App extends React.Component<{}, {}> {
+  public constructor(props: {}) {
+    super(props);
+    if (window.goTenna) {
+      const GOTENNA_APP_TOKEN = 'HAIOXh0GGVREXwZZBggfRAIMRU5HUlgDBBJaDxlRXhIDHAcDRFZVSg0cDA0DQg5L';
+      window.goTenna.setApplicationToken(GOTENNA_APP_TOKEN);
+    }
+  }
   public render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
+      <div className="app">
+        <div className="navbar">GoTennaSDKExample</div>
+        <button className="button-block">SCAN FOR NEW GOTENNA</button>
+        <button className="button-block">SCAN FOR PREVIOUSLY USED GOTENNA</button>
       </div>
     );
   }
