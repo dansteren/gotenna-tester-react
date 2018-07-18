@@ -32,9 +32,9 @@ interface GoTenna {
           disconnect: () => void;
           disconnectWithRetry: () => void;
           getConnectedGotennaAddress: () => Promise<{}>;
-          getGtConnectionState: () => Promise<{}>;
+          getGtConnectionState: () => Promise<string>;
           isConnected: () => Promise<{}>;
-          scanAndConnect: () => Promise<{}>;
+          scanAndConnect: (deviceType?: 'V1' | 'MESH') => Promise<{}>;
           stopScan: () => Promise<{}>;
       };
   };

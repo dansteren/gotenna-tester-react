@@ -3,7 +3,11 @@ import * as ReactDOM from 'react-dom';
 import App from './App';
 import './index.css';
 
-const startApp = () => {
+async function startApp() {
+  if (window.goTenna) {
+    const GOTENNA_APP_TOKEN = 'MY_TOKEN'; // TODO: Insert your token
+    await window.goTenna.setApplicationToken(GOTENNA_APP_TOKEN);
+  }
   ReactDOM.render(
     <App />,
     document.getElementById('root')

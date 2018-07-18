@@ -12,6 +12,8 @@
     "build": "react-scripts-ts build && rm -rf www && mv ./build ./www ",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
+    "restart": "./scripts/restart.sh",
+    "plugin": "./scripts/plugin.sh",
     "android": "npm run build && cordova run android"
   },
   "dependencies": {
