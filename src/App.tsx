@@ -19,9 +19,9 @@ class App extends React.Component<{}, {}> {
     this.disconnect = this.disconnect.bind(this);
     this.onIncomingMessage = this.onIncomingMessage.bind(this);
     this.setGID = this.setGID.bind(this);
-    if(window.goTenna){
-      window.goTenna.bluetooth.GTConnectionManager.addGtConnectionListener(this.onConnectionStateUpdated);
-      window.goTenna.commands.GTCommandCenter.setMessageListener(this.onIncomingMessage);
+    if(window.gotenna){
+      gotenna.addGtConnectionListener(this.onConnectionStateUpdated);
+      gotenna.setMessageListener(this.onIncomingMessage);
     }
   }
 
@@ -47,38 +47,38 @@ class App extends React.Component<{}, {}> {
   }
 
   private async getConnectedGotennaAddress() {
-    const result = await window.goTenna.bluetooth.GTConnectionManager.getConnectedGotennaAddress();
+    const result = await gotenna.getConnectedGotennaAddress();
     console.log('getConnectedGotennaAddress: ', result);
   }
 
   private async clearConnectedGotennaAddress() {
-    const result = await window.goTenna.bluetooth.GTConnectionManager.clearConnectedGotennaAddress();
+    const result = await gotenna.clearConnectedGotennaAddress();
     console.log('clearConnectedGotennaAddress: ', result);
   }
 
   private async getConnectionState() {
-    const result = await window.goTenna.bluetooth.GTConnectionManager.getGtConnectionState();
+    const result = await gotenna.getGtConnectionState();
     console.log('getGtConnectionState: ', result);
   }
 
   private scanForNewGotenna() {
-    window.goTenna.bluetooth.GTConnectionManager.scanAndConnect();
+    gotenna.scanAndConnect();
     console.log('New Scan clicked...');
   }
 
   private scanForOldGotenna() {
-    window.goTenna.bluetooth.GTConnectionManager.scanAndConnect('MESH');
+    gotenna.scanAndConnect('MESH');
     console.log('Old Scan clicked...');
   }
 
   private async stopScan() {
     console.log('Stopping Scan...');
-    await window.goTenna.bluetooth.GTConnectionManager.stopScan();
+    await gotenna.stopScan();
     console.log('Scan stopped');
   }
 
   private disconnect() {
-    window.goTenna.bluetooth.GTConnectionManager.disconnect();
+    gotenna.disconnect();
     console.log('Disconnecting...');
   }
 
@@ -88,7 +88,7 @@ class App extends React.Component<{}, {}> {
 
   private async setGID() {
     try {
-      await window.goTenna.commands.GTCommandCenter.setGoTennaGID(4321123123, 'Bob');
+      await gotenna.setGoTennaGID(4321123123, 'Bob');
       console.log('goTennaGID set successfully!');
     } catch (error) {
       console.error('setGoTennaGID: ', error);
@@ -97,7 +97,7 @@ class App extends React.Component<{}, {}> {
 
   private async sendMessage() {
     try {
-      await window.goTenna.commands.GTCommandCenter.sendMessage('This is a message from Bob', 678912313, false);
+      await gotenna.sendMessage('This is a message from Bob', 678912313, false);
       console.log('message sent!');
     } catch (error) {
       console.error('sendMessage: ', error);
