@@ -19,6 +19,9 @@ class App extends React.Component<{}, {}> {
     this.disconnect = this.disconnect.bind(this);
     this.onIncomingMessage = this.onIncomingMessage.bind(this);
     this.setGID = this.setGID.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
+    this.hasSuperToken = this.hasSuperToken.bind(this);
+    this.tokenIsVerified = this.tokenIsVerified.bind(this);
     if(window.gotenna){
       gotenna.addGtConnectionListener(this.onConnectionStateUpdated);
       gotenna.setMessageListener(this.onIncomingMessage);
@@ -38,6 +41,8 @@ class App extends React.Component<{}, {}> {
         <button className="button-block" onClick={this.disconnect}>DISCONNECT</button>
         <button className="button-block" onClick={this.setGID}>SET GID</button>
         <button className="button-block" onClick={this.sendMessage}>SEND MESSAGE</button>
+        <button className="button-block" onClick={this.tokenIsVerified}>TOKEN IS VERIFIED?</button>
+        <button className="button-block" onClick={this.hasSuperToken}>HAS SUPER TOKEN</button>
       </div>
     );
   }
@@ -102,6 +107,16 @@ class App extends React.Component<{}, {}> {
     } catch (error) {
       console.error('sendMessage: ', error);
     }
+  }
+
+  private async hasSuperToken() {
+    const hasSuperToken = await gotenna.hasSuperToken();
+    console.error('hasSuperToken: ', hasSuperToken);
+  }
+
+  private async tokenIsVerified() {
+    const tokenIsVerified = await gotenna.tokenIsVerified();
+    console.error('tokenIsVerified: ', tokenIsVerified);
   }
 }
 

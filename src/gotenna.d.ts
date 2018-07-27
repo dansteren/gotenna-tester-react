@@ -3,23 +3,27 @@
 // Definitions by: Dan Steren <https://github.com/dansteren/>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
+type GotennaConnectionState = "CONNECTED" | "DISCONNECTED" | "SCANNING";
+type GotennaBluetoothStatus = "NOT_SUPPORTED" | "SUPPORTED_AND_ENABLED" | "SUPPORTED_NOT_ENABLED";
+
 interface Gotenna {
   getApplicationBuildId(): Promise<{}>;
-  isInDebugMode(): Promise<{}>;
+  hasSuperToken(): Promise<boolean>;
+  isInDebugMode(): Promise<boolean>;
   setApplicationToken(token: string): void;
-  tokenIsVerified(): Promise<{}>;
-  bluetoothIsEnabled(): Promise<{}>;
-  deviceSupportsBluetooth(): Promise<{}>;
+  tokenIsVerified(): Promise<boolean>;
+  bluetoothIsEnabled(): Promise<boolean>;
+  deviceSupportsBluetooth(): Promise<boolean>;
   disableBluetooth(): void;
-  getBluetoothStatus(): Promise<{}>;
+  getBluetoothStatus(): Promise<GotennaBluetoothStatus>;
   showRequestBluetoothPermissionDialog(): void;
-  addGtConnectionListener(callback: (gtConnectionState: "CONNECTED" | "DISCONNECTED" | "SCANNING") => any): Promise<{}>;
+  addGtConnectionListener(callback: (gtConnectionState: GotennaConnectionState) => any): Promise<{}>;
   clearConnectedGotennaAddress(): void;
   disconnect(): void;
   disconnectWithRetry(): void;
-  getConnectedGotennaAddress(): Promise<{}>;
-  getGtConnectionState(): Promise<{}>;
-  isConnected(): Promise<{}>;
+  getConnectedGotennaAddress(): Promise<string>;
+  getGtConnectionState(): Promise<GotennaConnectionState>;
+  isConnected(): Promise<boolean>;
   scanAndConnect(deviceType?: 'V1' | 'MESH'): Promise<{}>;
   stopScan(): Promise<{}>;
   setGoTennaGID(gid: number, username: string): Promise<{}>;
@@ -29,21 +33,22 @@ interface Gotenna {
 
 declare namespace gotenna {
   function getApplicationBuildId(): Promise<{}>;
-  function isInDebugMode(): Promise<{}>;
+  function hasSuperToken(): Promise<boolean>;
+  function isInDebugMode(): Promise<boolean>;
   function setApplicationToken(token: string): void;
-  function tokenIsVerified(): Promise<{}>;
-  function bluetoothIsEnabled(): Promise<{}>;
-  function deviceSupportsBluetooth(): Promise<{}>;
+  function tokenIsVerified(): Promise<boolean>;
+  function bluetoothIsEnabled(): Promise<boolean>;
+  function deviceSupportsBluetooth(): Promise<boolean>;
   function disableBluetooth(): void;
-  function getBluetoothStatus(): Promise<{}>;
+  function getBluetoothStatus(): Promise<GotennaBluetoothStatus>;
   function showRequestBluetoothPermissionDialog(): void;
-  function addGtConnectionListener(callback: (gtConnectionState: "CONNECTED" | "DISCONNECTED" | "SCANNING") => any): Promise<{}>;
+  function addGtConnectionListener(callback: (gtConnectionState: GotennaConnectionState) => any): Promise<{}>;
   function clearConnectedGotennaAddress(): void;
   function disconnect(): void;
   function disconnectWithRetry(): void;
-  function getConnectedGotennaAddress(): Promise<{}>;
-  function getGtConnectionState(): Promise<{}>;
-  function isConnected(): Promise<{}>;
+  function getConnectedGotennaAddress(): Promise<string>;
+  function getGtConnectionState(): Promise<GotennaConnectionState>;
+  function isConnected(): Promise<boolean>;
   function scanAndConnect(deviceType?: 'V1' | 'MESH'): Promise<{}>;
   function stopScan(): Promise<{}>;
   function setGoTennaGID(gid: number, username: string): Promise<{}>;
