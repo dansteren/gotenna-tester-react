@@ -5,23 +5,3 @@
   flex-direction: column;
   align-items: center;
 }
-.navbar {
-  height: 56px;
-  color: white;
-  background-color: #3F51B5;
-  display: flex;
-  align-items: center;
-  padding-left: 32px;
-  box-shadow: 0px 2px 5px rgba(0,0,0,.24);
-  width: 100%;
-}
-.button-block {
-  display: block;
-  padding: 12px 16px;
-  border-radius: 2px;
-  margin: 6px;
-  text-transform: uppercase;
-  background-color: #E0E0E0;
-  border: 0px solid #000000;
-  box-shadow: 0px 1px 2px rgba(0,0,0,.24);
-}
