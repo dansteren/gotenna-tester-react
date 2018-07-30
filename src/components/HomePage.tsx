@@ -1,130 +1,205 @@
 import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import './HomePage.css';
 
-enum ConnectionState {
-  Connected = "CONNECTED",
-  Disconnected ="DISCONNECTED",
-  Scanning = "SCANNING"
+interface IState {
+  snackbarOpen: boolean;
+  snackbarMessage: string;
 }
 
-const MyLink = (props: {}) => <Link to="/connected" {...props} />
-
-class App extends React.Component<{}, {}> {
+class App extends React.Component<{}, IState> {
   public constructor(props: {}) {
     super(props);
-    this.getConnectionState = this.getConnectionState.bind(this);
-    this.getConnectedGotennaAddress = this.getConnectedGotennaAddress.bind(this);
-    this.clearConnectedGotennaAddress = this.clearConnectedGotennaAddress.bind(this);
-    this.scanForNewGotenna = this.scanForNewGotenna.bind(this);
-    this.scanForOldGotenna = this.scanForOldGotenna.bind(this);
-    this.stopScan = this.stopScan.bind(this);
-    this.disconnect = this.disconnect.bind(this);
-    this.onIncomingMessage = this.onIncomingMessage.bind(this);
-    this.setGID = this.setGID.bind(this);
-    this.sendMessage = this.sendMessage.bind(this);
-    this.hasSuperToken = this.hasSuperToken.bind(this);
-    this.tokenIsVerified = this.tokenIsVerified.bind(this);
-    if(window.gotenna){
-      gotenna.addGtConnectionListener(this.onConnectionStateUpdated);
-      gotenna.setMessageListener(this.onIncomingMessage);
+    this.state = {
+      snackbarMessage: '',
+      snackbarOpen: false,
     }
+    this.addGroupGID = this.addGroupGID.bind(this);
+    this.addMulticastGroupGID = this.addMulticastGroupGID.bind(this);
+    this.deleteCurrentUser = this.deleteCurrentUser.bind(this);
+    this.deleteGroupGID = this.deleteGroupGID.bind(this);
+    this.deleteMulticastGroupGID = this.deleteMulticastGroupGID.bind(this);
+    this.getCurrentUser = this.getCurrentUser.bind(this);
+    this.hasGroupGID = this.hasGroupGID.bind(this);
+    this.hasMulticastGroupGID = this.hasMulticastGroupGID.bind(this);
+    this.hasValidUser = this.hasValidUser.bind(this);
+    this.isMyGID = this.isMyGID.bind(this);
+    this.registerUser = this.registerUser.bind(this);
+    this.saveCurrentUser = this.saveCurrentUser.bind(this);
+    this.setCurrentUser = this.setCurrentUser.bind(this);
+    this.updateLastConnectedTime = this.updateLastConnectedTime.bind(this);
+    this.updateLastLocation = this.updateLastLocation.bind(this);
   }
 
   public render() {
     return (
       <div className="app">
         <div className="navbar">Bob</div>
-        <Button variant="contained" color="primary" component={MyLink}>
-          Hello World
-        </Button>
-        <button className="button-block" onClick={this.getConnectionState}>GET CONNECTION STATE</button>
-        <button className="button-block" onClick={this.getConnectedGotennaAddress}>GET CONNECTED GOTENNA ADDRESS</button>
-        <button className="button-block" onClick={this.clearConnectedGotennaAddress}>CLEAR CONNECTED GOTENNA ADDRESS</button>
-        <button className="button-block" onClick={this.scanForNewGotenna}>SCAN FOR V1 GOTENNA</button>
-        <button className="button-block" onClick={this.scanForOldGotenna}>SCAN FOR MESH GOTENNA</button>
-        <button className="button-block" onClick={this.stopScan}>STOP SCAN</button>
-        <button className="button-block" onClick={this.disconnect}>DISCONNECT</button>
-        <button className="button-block" onClick={this.setGID}>SET GID</button>
-        <button className="button-block" onClick={this.sendMessage}>SEND MESSAGE</button>
-        <button className="button-block" onClick={this.tokenIsVerified}>TOKEN IS VERIFIED?</button>
-        <button className="button-block" onClick={this.hasSuperToken}>HAS SUPER TOKEN</button>
+        <div className="main-content">
+          <Button variant="contained" onClick={this.addGroupGID}>Add Group GID</Button>
+          <Button variant="contained" onClick={this.addMulticastGroupGID}>Add Multicast Group GID</Button>
+          <Button variant="contained" onClick={this.deleteCurrentUser}>Delete Current User</Button>
+          <Button variant="contained" onClick={this.deleteGroupGID}>Delete Group GID</Button>
+          <Button variant="contained" onClick={this.deleteMulticastGroupGID}>Delete Multicast Group GID</Button>
+          <Button variant="contained" onClick={this.getCurrentUser}>Get Current User</Button>
+          <Button variant="contained" onClick={this.hasGroupGID}>Has Group GID</Button>
+          <Button variant="contained" onClick={this.hasMulticastGroupGID}>Has Multicast Group GID</Button>
+          <Button variant="contained" onClick={this.hasValidUser}>Has Valid User</Button>
+          <Button variant="contained" onClick={this.isMyGID}>Is My GID?</Button>
+          <Button variant="contained" onClick={this.registerUser}>Register User</Button>
+          <Button variant="contained" onClick={this.saveCurrentUser}>Save Current User</Button>
+          <Button variant="contained" onClick={this.setCurrentUser}>Set Current User</Button>
+          <Button variant="contained" onClick={this.updateLastConnectedTime}>Update Last Connected Time</Button>
+          <Button variant="contained" onClick={this.updateLastLocation}>Update Last Location</Button>
+          <Snackbar
+            anchorOrigin={{
+              horizontal: 'left',
+              vertical: 'top',
+            }}
+            open={this.state ? this.state.snackbarOpen : false}
+            autoHideDuration={1500}
+            onClose={this.handleSnackbarClose}
+            message={<span id="message-id">{this.state ? this.state.snackbarMessage : ''}</span>}
+          />
+        </div>
       </div>
     );
   }
 
-  private onConnectionStateUpdated(gtConnectionState: ConnectionState) {
-    console.log('onConnectionStateUpdated ' + gtConnectionState);
+  private addGroupGID() {
+    this.execute(() => {
+      gotenna.addGroupGID(2314321123);
+      this.toast('addGroupGID: success');
+    });
   }
 
-  private async getConnectedGotennaAddress() {
-    const result = await gotenna.getConnectedGotennaAddress();
-    console.log('getConnectedGotennaAddress: ', result);
+  private addMulticastGroupGID() {
+    this.execute(() => {
+      gotenna.addMulticastGroupGID(1111111111);
+      this.toast('addMulticastGroupGID: success');
+    });
   }
 
-  private async clearConnectedGotennaAddress() {
-    const result = await gotenna.clearConnectedGotennaAddress();
-    console.log('clearConnectedGotennaAddress: ', result);
+  private deleteCurrentUser() {
+    this.execute(() => {
+      gotenna.deleteCurrentUser();
+      this.toast('deleteCurrentUser: success');
+    });
   }
 
-  private async getConnectionState() {
-    const result = await gotenna.getGtConnectionState();
-    console.log('getGtConnectionState: ', result);
+  private deleteGroupGID() {
+    this.execute(() => {
+      gotenna.deleteGroupGID(2314321123);
+      this.toast('deleteGroupGID: success')
+    })
   }
 
-  private scanForNewGotenna() {
-    gotenna.scanAndConnect();
-    console.log('New Scan clicked...');
+  private deleteMulticastGroupGID() {
+    this.execute(() => {
+      gotenna.deleteMulticastGroupGID(1111111111);
+      this.toast('deleteGroupGID: success')
+    })
   }
 
-  private scanForOldGotenna() {
-    gotenna.scanAndConnect('MESH');
-    console.log('Old Scan clicked...');
+  private getCurrentUser() {
+    this.execute(async () => {
+      const user = await gotenna.getCurrentUser();
+      console.log(user);
+      if(!user) {
+        this.toast('getCurrentUser: undefined');
+      } else {
+        this.toast(`getCurrentUser: ${user.name} (${user.initials()}) - ${user.gid}`);
+      }
+    });
   }
 
-  private async stopScan() {
-    console.log('Stopping Scan...');
-    await gotenna.stopScan();
-    console.log('Scan stopped');
+  private hasGroupGID() {
+    this.execute(async () => {
+      const hasGID = await gotenna.hasGroupGID(2314321123);
+      this.toast('hasGroupGID: ' + hasGID)
+    })
   }
 
-  private disconnect() {
-    gotenna.disconnect();
-    console.log('Disconnecting...');
+  private hasMulticastGroupGID() {
+    this.execute(async () => {
+      const hasGID = await gotenna.hasMulticastGroupGID(1111111111);
+      this.toast('hasMulticastGroupGID: ' + hasGID)
+    })
   }
 
-  private onIncomingMessage(message: string) {
-    console.log('onIncomingMessage: ',  message);
+  private hasValidUser() {
+    this.execute(async () => {
+      const hasValidUser = await gotenna.hasValidUser();
+      this.toast('hasValidUser: ' + hasValidUser);
+    });
   }
 
-  private async setGID() {
-    try {
-      await gotenna.setGoTennaGID(4321123123, 'Bob');
-      console.log('goTennaGID set successfully!');
-    } catch (error) {
-      console.error('setGoTennaGID: ', error);
+  private isMyGID() {
+    this.execute(async () => {
+      const isMyGID = await gotenna.isMyGID(1234567890);
+      this.toast('isMyGID: ' + isMyGID)
+    })
+  }
+
+  private registerUser() {
+    this.execute(async () => {
+      const user = await gotenna.registerUser("Bob the Builder", 9999999999);
+      console.log(user);
+      this.toast(`registerUser: ${user.name} (${user.gid})`);
+    })
+  }
+
+  private saveCurrentUser() {
+    this.execute(() => {
+      gotenna.saveCurrentUser();
+      this.toast('saveCurrentUser: success')
+    });
+  }
+
+  private setCurrentUser() {
+    this.execute(() => {
+      const newUser = new gotenna.User({
+        gid: 1234567890,
+        name: "Dan Orama",
+      })
+      gotenna.setCurrentUser(newUser);
+      this.toast('setCurrentUser: success')
+    });
+  }
+
+  private updateLastConnectedTime() {
+    this.execute(() => {
+      gotenna.updateLastConnectedTime();
+      this.toast('updateLastConnectedTime: success')
+    });
+  }
+
+  private updateLastLocation() {
+    this.execute(() => {
+      gotenna.updateLastLocation(40.244261699999996, -111.64729609999999, 30, Date.now());
+      this.toast('updateLastLocation: success')
+    });
+  }
+
+  private execute(callback: () => void) {
+    if(window.gotenna) {
+      callback()
+    } else {
+      this.toast('goTenna Unavailable');
     }
   }
 
-  private async sendMessage() {
-    try {
-      await gotenna.sendMessage('This is a message from Bob', 678912313, false);
-      console.log('message sent!');
-    } catch (error) {
-      console.error('sendMessage: ', error);
-    }
+  private toast(message: string) {
+    this.setState({
+      snackbarMessage: message,
+      snackbarOpen: true,
+    })
   }
 
-  private async hasSuperToken() {
-    const hasSuperToken = await gotenna.hasSuperToken();
-    console.error('hasSuperToken: ', hasSuperToken);
-  }
-
-  private async tokenIsVerified() {
-    const tokenIsVerified = await gotenna.tokenIsVerified();
-    console.error('tokenIsVerified: ', tokenIsVerified);
-  }
+  private handleSnackbarClose = (event: any) => {
+    this.setState({ snackbarOpen: false });
+  };
 }
 
 export default App;
